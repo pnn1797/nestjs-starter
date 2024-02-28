@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  kcon-db:
+    container_name: kcon_db
+    image: postgres:10.16
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "${DATABASE}"
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - nfg-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    expose:
+    - "${DB_PORT}"
+    command: -p ${DB_PORT}
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -p ${DB_PORT} -d ${DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+networks:
+  app-network:
+volumes:
+  nfg-db-data:
