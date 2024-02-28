@@ -32,6 +32,13 @@ async function bootstrap() {
     .build()
   const document = SwaggerModule.createDocument(app, openApiConfig)
   SwaggerModule.setup('api', app, document)
+  //Enable CORS
+  const ableOrigin: string = configService.get('ABLE_ORIGIN_REQUEST_FROM') || ''
+  app.enableCors({
+    origin: ableOrigin.split(','), // Replace with the origin(s) you want to allow
+    credentials: true, // To allow credentials (e.g., cookies)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  })
 
   await app.listen(appPort)
 }
